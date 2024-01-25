@@ -1,0 +1,23 @@
+{
+    "name": "zephyrforge/zephyrforge",
+    "description": "PHP MVC Framework",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Zephyrforge\\Zephyrforge\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Krzysztof Żyłka",
+            "email": "krzysztofzylka@yahoo.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "twig/twig": "^3.8",
+        "krzysztofzylka/file": "1.0.*",
+        "krzysztofzylka/strings": "1.0.*"
+    }
+}
