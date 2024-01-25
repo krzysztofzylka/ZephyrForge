@@ -2,9 +2,9 @@
 
 namespace Zephyrforge\Zephyrforge\Libs\Log;
 
-use Zephyrforge\Zephyrforge\Kernel;
 use Krzysztofzylka\File\File;
 use Throwable;
+use Zephyrforge\Zephyrforge\Kernel;
 
 /**
  * Logs

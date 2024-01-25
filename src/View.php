@@ -3,11 +3,11 @@
 namespace Zephyrforge\Zephyrforge;
 
 
+use Throwable;
 use Zephyrforge\Zephyrforge\Exception\MainException;
 use Zephyrforge\Zephyrforge\Exception\NotFoundException;
 use Zephyrforge\Zephyrforge\Libs\Log\Log;
 use Zephyrforge\Zephyrforge\Libs\Twig\Twig;
-use Throwable;
 
 /**
  * View class
