@@ -85,7 +85,7 @@ class Kernel
         } catch (\Throwable $throwable) {
             Log::throwableLog($throwable);
 
-            Throw new MainException($throwable->getMessage(), 500, $throwable);
+            throw new MainException($throwable->getMessage(), 500, $throwable);
         }
 
         Kernel::$init = true;
