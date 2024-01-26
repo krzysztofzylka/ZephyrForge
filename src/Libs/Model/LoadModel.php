@@ -2,6 +2,7 @@
 
 namespace Zephyrforge\Zephyrforge\Libs\Model;
 
+use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\Strings\Strings;
 use Zephyrforge\Zephyrforge\Controller;
 use Zephyrforge\Zephyrforge\Exception\NotFoundException;
@@ -40,6 +41,17 @@ trait LoadModel
         $model = new $className();
         $model->name = $name;
         $model->controller = $this instanceof Controller ? $this : $this->controller;
+
+        if ($_ENV['DATABASE']) {
+            if (!isset($model->useTable)) {
+                $model->useTable = $name;
+            }
+
+            if (isset($model->useTable) && is_string($model->useTable)) {
+                $model->tableInstance = (new Table($model->useTable));
+            }
+        }
+
         $this->models[Strings::camelizeString($name, '_')] = $model;
 
         return $model;
