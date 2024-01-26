@@ -67,6 +67,7 @@ class Kernel
                     self::$projectPath . '/migrations'
                 ], 0775);
                 File::touch(self::$projectPath . '/.env');
+                File::copy(__DIR__ . '/Libs/Migrator/Other/migrator.php', Kernel::$projectPath . '/migrator.php');
             }
         } catch (Throwable $throwable) {
             Log::throwableLog($throwable);
