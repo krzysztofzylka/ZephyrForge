@@ -157,4 +157,13 @@ class Model
         }
     }
 
+    /**
+     * Retrieves the structure of the table.
+     * @return array An array representing the structure of the table.
+     */
+    public function tableStructure(): array
+    {
+        return [];
+    }
+
 }

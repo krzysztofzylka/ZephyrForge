@@ -63,7 +63,8 @@ class Kernel
                     self::$projectPath . '/storage/logs',
                     self::$projectPath . '/storage/cache',
                     self::$projectPath . '/storage/cache/twig',
-                    self::$projectPath . '/public'
+                    self::$projectPath . '/public',
+                    self::$projectPath . '/migrations'
                 ], 0775);
                 File::touch(self::$projectPath . '/.env');
             }
