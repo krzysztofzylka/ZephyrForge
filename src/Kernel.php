@@ -125,7 +125,7 @@ class Kernel
      */
     private function defineProjectPath(): void
     {
-        if (!isset($this->projectPath)) {
+        if (!isset(self::$projectPath)) {
             self::$projectPath = $this->determineProjectPath();
         }
 
