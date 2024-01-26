@@ -41,12 +41,14 @@ class Kernel
     private static bool $init = false;
 
     /**
-     * Start kernel
+     * Initialize the project.
+     * This method defines the project path, autoloads the necessary files, creates the required directory structure and
+     * loads the environment configuration. It also connects to the database.
      * @return void
-     * @throws MainException
+     * @throws MainException When an error occurs during initialization.
      * @throws Exception
      */
-    public function run(): void
+    public function init(): void
     {
         try {
             $this->defineProjectPath();
@@ -73,7 +75,16 @@ class Kernel
 
         $this->loadEnv();
         $this->connectDatabase();
+    }
 
+    /**
+     * Start kernel
+     * @return void
+     * @throws MainException
+     * @throws Exception
+     */
+    public function run(): void
+    {
         $action = $this->getAction();
         $controllerClass = '\\controller\\' . $action['controller'];
 
