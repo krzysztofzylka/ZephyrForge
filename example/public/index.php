@@ -8,3 +8,5 @@ try {
 } catch (Throwable $throwable) {
     var_dump($throwable);
 }
+
+var_dump($_ENV);

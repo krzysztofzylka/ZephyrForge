@@ -2,7 +2,15 @@
 
 namespace Zephyrforge\Zephyrforge;
 
+use Exception;
+use krzysztofzylka\DatabaseManager\DatabaseConnect;
+use krzysztofzylka\DatabaseManager\DatabaseManager;
+use Krzysztofzylka\DatabaseManager\Enum\DatabaseType;
+use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
+use Krzysztofzylka\Env\Env;
 use Krzysztofzylka\File\File;
+use Throwable;
+use Zephyrforge\Zephyrforge\Exception\HiddenException;
 use Zephyrforge\Zephyrforge\Exception\MainException;
 use Zephyrforge\Zephyrforge\Exception\NotFoundException;
 use Zephyrforge\Zephyrforge\Libs\Log\Log;
@@ -36,6 +44,7 @@ class Kernel
      * Start kernel
      * @return void
      * @throws MainException
+     * @throws Exception
      */
     public function run(): void
     {
@@ -54,12 +63,16 @@ class Kernel
                     self::$projectPath . '/storage/cache/twig',
                     self::$projectPath . '/public'
                 ], 0775);
+                File::touch(self::$projectPath . '/.env');
             }
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             Log::throwableLog($throwable);
 
             throw new MainException($throwable->getMessage(), 500, $throwable);
         }
+
+        $this->loadEnv();
+        $this->connectDatabase();
 
         $action = $this->getAction();
         $controllerClass = '\\controller\\' . $action['controller'];
@@ -82,7 +95,7 @@ class Kernel
             $controller->action = $action['method'];
 
             $controller->{$action['method']}(...$action['parameters']);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             Log::throwableLog($throwable);
 
             throw new MainException($throwable->getMessage(), 500, $throwable);
@@ -141,12 +154,76 @@ class Kernel
         spl_autoload_register(function ($class_name) {
             $path = File::repairPath(self::$projectPath . DIRECTORY_SEPARATOR . $class_name . '.php');
 
-            if (!file_exists($path)) {
-                throw new NotFoundException('Class not found');
-            }
-
             include($path);
         });
+    }
+
+    /**
+     * Load the environment variables.
+     * @return void
+     * @throws Exception
+     */
+    private function loadEnv(): void
+    {
+        if (Kernel::$init) {
+            return;
+        }
+
+        try {
+            $env = new Env([
+                __DIR__ . '/Libs/Env/.env',
+                self::$projectPath . '/.env'
+            ]);
+
+            $env->load();
+        } catch (Throwable $throwable) {
+            Log::throwableLog($throwable);
+
+            throw new MainException($throwable->getMessage(), 500, $throwable);
+        }
+    }
+
+    /**
+     * Connect to the database.
+     * This method connects to the database using the provided database configuration
+     * parameters from the environment variables.
+     * @throws HiddenException If a DatabaseManagerException occurs, it is caught, logged,
+     *                         and rethrown as a HiddenException.
+     * @throws MainException   If any other exception or error occurs, it is caught, logged,
+     *                         and rethrown as a MainException with a status code of 500.
+     */
+    private function connectDatabase(): void
+    {
+        if (!$_ENV['DATABASE']) {
+            return;
+        }
+
+        $connection = DatabaseConnect::create()
+            ->setType(
+                match ($_ENV['DATABASE_DRIVER']) {
+                    'mysql' => DatabaseType::mysql,
+                    'sqlite' => DatabaseType::sqlite
+                }
+            )
+            ->setCharset($_ENV['DATABASE_CHARSET'])
+            ->setHost($_ENV['DATABASE_HOST'])
+            ->setDatabaseName($_ENV['DATABASE_NAME'])
+            ->setPassword($_ENV['DATABASE_PASSWORD'])
+            ->setUsername($_ENV['DATABASE_USERNAME'])
+            ->setPort($_ENV['DATABASE_PORT']);
+
+        try {
+            $manager = new DatabaseManager();
+            $manager->connect($connection);
+        } catch (DatabaseManagerException $exception) {
+            Log::throwableLog($exception);
+
+            throw new HiddenException($exception->getHiddenMessage() ?: $exception->getMessage(), $exception->getCode(), $exception);
+        } catch (Throwable $throwable) {
+            Log::throwableLog($throwable);
+
+            throw new MainException($throwable->getMessage(), 500, $throwable);
+        }
     }
 
 }

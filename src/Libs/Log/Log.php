@@ -4,6 +4,7 @@ namespace Zephyrforge\Zephyrforge\Libs\Log;
 
 use Krzysztofzylka\File\File;
 use Throwable;
+use Zephyrforge\Zephyrforge\Exception\HiddenException;
 use Zephyrforge\Zephyrforge\Kernel;
 
 /**
@@ -95,6 +96,7 @@ class Log
     {
         return [
             'message' => $throwable->getMessage(),
+            'hiddenMessage' => $throwable instanceof HiddenException ? $throwable->getHiddenMessage() : null,
             'code' => $throwable->getCode(),
             'trace' => $throwable->getTraceAsString()
         ];
