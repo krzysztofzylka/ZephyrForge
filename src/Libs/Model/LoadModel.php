@@ -50,6 +50,8 @@ trait LoadModel
             if (isset($model->useTable) && is_string($model->useTable)) {
                 $model->tableInstance = (new Table($model->useTable));
             }
+        } else {
+            $model->useTable = false;
         }
 
         $this->models[Strings::camelizeString($name, '_')] = $model;
