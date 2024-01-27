@@ -65,7 +65,8 @@ class Kernel
                     self::$projectPath . '/storage/cache',
                     self::$projectPath . '/storage/cache/twig',
                     self::$projectPath . '/public',
-                    self::$projectPath . '/migrations'
+                    self::$projectPath . '/migrations',
+                    self::$projectPath . '/templates'
                 ], 0775);
                 File::touch(self::$projectPath . '/.env');
                 File::copy(__DIR__ . '/Libs/Migrator/Other/migrator.php', Kernel::$projectPath . '/migrator.php');
