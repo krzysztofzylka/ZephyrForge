@@ -83,7 +83,7 @@ class Migrator
             }
 
             $filePath = Kernel::$projectPath . '/migrations/' . $fileName;
-            $name = str_replace($fileExtension, '', $fileName);
+            $name = str_replace('.' . $fileExtension, '', $fileName);
 
             if ($this->tableInstance->findCount(['migrations.name' => $name])) {
                 continue;
@@ -171,6 +171,7 @@ class Migrator
             }
 
             $databaseTableStructureName = array_values($databaseTableStructureName);
+            $databaseTableStructure = array_values($databaseTableStructure);
 
             //add column
             foreach ($tableStructureName as $key => $value) {
@@ -198,30 +199,29 @@ class Migrator
                     $databaseTableStructureName = array_column($databaseTableStructure, 'Field');
                 }
             }
-        }
 
-        # Update differences
-        foreach (array_keys($tableStructureName) as $key) {
-            $columnStructure = $tableStructure[$key];
-            $columnData = $this->generateColumns([$columnStructure]);
-            $databaseColumnStructure = $databaseTableStructure[$key];
-            $type = $columnStructure['type'];
+            # Update differences
+            foreach (array_keys($tableStructureName ?? []) as $key) {
+                $columnStructure = $tableStructure[$key];
+                $columnData = $this->generateColumns([$columnStructure]);
+                $databaseColumnStructure = @$databaseTableStructure[$key];
 
-            if (isset($columnStructure['length']) && $type !== 'int' && $columnStructure['length'] !== 11) {
-                $type .= "({$columnStructure['length']})";
-            }
+                $type = $columnStructure['type'];
 
-            if (!isset($columnStructure['null'] )) {
-                $columnStructure['null']  = 'false';
-            }
+                if (isset($columnStructure['length']) && $type !== 'int' && $columnStructure['length'] !== 11) {
+                    $type .= "({$columnStructure['length']})";
+                }
 
-            $changeName = $columnStructure['name'] !== $databaseColumnStructure['Field'];
-            $changeType = $type !== $databaseColumnStructure['Type'];
+                if (!isset($columnStructure['null'])) {
+                    $columnStructure['null']  = 'false';
+                }
 
-            var_dump([$type, $databaseColumnStructure['Type']]);
+                $changeName = @$columnStructure['name'] !== @$databaseColumnStructure['Field'];
+                $changeType = @$type !== @$databaseColumnStructure['Type'];
 
-            if ($changeName || $changeType) {
-                $this->migrationData[] = 'ALTER TABLE `' . $model->useTable . '` CHANGE `' . $columnStructure['name'] . '` ' . $columnData[0];
+                if ($changeName || $changeType) {
+                    $this->migrationData[] = 'ALTER TABLE `' . $model->useTable . '` CHANGE `' . $columnStructure['name'] . '` ' . $columnData[0];
+                }
             }
         }
 

@@ -36,6 +36,12 @@ class test extends Model
                 'default_function' => true
             ],
             [
+                'name' => 'date_modify',
+                'type' => 'datetime',
+                'default' => 'NOW()',
+                'default_function' => true
+            ],
+            [
                 'name' => 'alt',
                 'type' => 'text',
                 'null' => true
