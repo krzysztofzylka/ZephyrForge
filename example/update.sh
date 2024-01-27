@@ -1,0 +1,2 @@
+php migrator.php
+grunt
