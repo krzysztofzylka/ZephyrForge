@@ -2,6 +2,8 @@
   "dependencies": {
     "jquery": "^3.7.1",
     "grunt-contrib-concat": "^2.1.0",
-    "grunt-contrib-uglify": "^5.2.2"
+    "grunt-contrib-uglify": "^5.2.2",
+    "jquery-ui-dist": "^1.13.2",
+    "grunt-contrib-cssmin": "^5.0.0"
   }
 }

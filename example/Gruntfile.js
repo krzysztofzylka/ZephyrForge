@@ -5,13 +5,17 @@ module.exports = function(grunt) {
             js: {
                 src: [
                     'node_modules/jquery/dist/jquery.min.js',
+                    'node_modules/jquery-ui-dist/jquery-ui.min.js',
                     'js/*.js'
                 ],
                 dest: 'storage/tmp/app.js',
             },
             css: {
-                src: ['css/*.css'],
-                dest: 'public/app.css',
+                src: [
+                    'node_modules/jquery-ui-dist/jquery-ui.min.css',
+                    'css/*.css'
+                ],
+                dest: 'storage/tmp/app.css',
             },
         },
         uglify: {
@@ -20,11 +24,27 @@ module.exports = function(grunt) {
                     'public/app.js': ['storage/tmp/app.js']
                 }
             }
+        },
+        cssmin: {
+            options: {
+                level: {
+                    1: {
+                        specialComments: 0
+                    }
+                }
+            },
+            target: {
+                files: [{
+                    src: 'storage/tmp/app.css',
+                    dest: 'public/app.css',
+                }]
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-    grunt.registerTask('default', ['concat', 'uglify']);
+    grunt.registerTask('default', ['concat', 'uglify', 'cssmin']);
 };
