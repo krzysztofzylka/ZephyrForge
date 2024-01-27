@@ -90,7 +90,7 @@ class Kernel
     public function run(): void
     {
         $action = $this->getAction();
-        $controllerClass = '\\controller\\' . $action['controller'];
+        $controllerClass = '\\src\\controller\\' . $action['controller'];
 
         if (!class_exists($controllerClass)) {
             $filePath = self::$projectPath . '/public/' . htmlspecialchars($_GET['action']);

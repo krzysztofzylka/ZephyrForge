@@ -42,7 +42,7 @@ class Controller
     public function loadView(array $variables = [], string $action = null): void
     {
         $action = $action ?: $this->name . '/' . $this->action . '.twig';
-        $viewPath = Kernel::$projectPath . '/view/' . $action;
+        $viewPath = Kernel::$projectPath . '/src/view/' . $action;
         $view = new View();
 
         $view->render(

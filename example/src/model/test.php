@@ -1,6 +1,6 @@
 <?php
 
-namespace model;
+namespace src\model;
 
 use Zephyrforge\Zephyrforge\Model;
 

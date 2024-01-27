@@ -29,7 +29,7 @@ trait LoadModel
      */
     public function loadModel(string $name): Model
     {
-        $className = '\\model\\' . $name;
+        $className = '\\src\\model\\' . $name;
 
         if (!class_exists($className)) {
             Log::log('Model ' . $name . ' not found', 'ERROR');

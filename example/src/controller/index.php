@@ -1,6 +1,6 @@
 <?php
 
-namespace controller;
+namespace src\controller;
 
 use Zephyrforge\Zephyrforge\Controller;
 
