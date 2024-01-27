@@ -76,12 +76,14 @@ class Migrator
         sort($scan);
 
         foreach ($scan as $fileName) {
-            if (File::getExtension($fileName) !== 'sql') {
+            $fileExtension = File::getExtension($fileName);
+
+            if ($fileExtension !== 'sql') {
                 continue;
             }
 
             $filePath = Kernel::$projectPath . '/migrations/' . $fileName;
-            $name = str_replace('.sql', '', $fileName);
+            $name = str_replace($fileExtension, '', $fileName);
 
             if ($this->tableInstance->findCount(['migrations.name' => $name])) {
                 continue;

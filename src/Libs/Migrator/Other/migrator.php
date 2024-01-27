@@ -13,5 +13,6 @@ $kernel->init();
 File::mkdir(Kernel::$projectPath . '/migrations');
 
 $migrator = new Migrator();
+$migrator->runMigrations();
 $migrator->createMigrations();
 $migrator->runMigrations();
