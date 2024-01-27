@@ -39,12 +39,37 @@ module.exports = function(grunt) {
                     dest: 'public/app.css',
                 }]
             }
+        },
+        shell: {
+            tailwind: {
+                command: 'npx tailwindcss -i ./src/public/css/_tailwind.css -o ./public/theme.css'
+            },
+            tailwind_watch: {
+                command: 'npx tailwindcss -i ./src/public/css/_tailwind.css -o ./public/theme.css --watch'
+            }
         }
     });
 
+    grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-    grunt.registerTask('default', ['concat', 'uglify', 'cssmin']);
+    grunt.registerTask(
+        'default',
+        [
+            'concat:js',
+            'uglify:js',
+            'cssmin',
+            'shell:tailwind'
+        ]
+    );
+
+    grunt.registerTask(
+        'dev',
+        [
+            'default', 'shell:tailwind_watch'
+        ]
+    );
+
 };
