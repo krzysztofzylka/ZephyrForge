@@ -61,6 +61,7 @@ class Kernel
                     self::$projectPath . '/controller',
                     self::$projectPath . '/view',
                     self::$projectPath . '/storage',
+                    self::$projectPath . '/storage/tmp',
                     self::$projectPath . '/storage/logs',
                     self::$projectPath . '/storage/cache',
                     self::$projectPath . '/storage/cache/twig',
