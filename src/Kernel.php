@@ -14,6 +14,7 @@ use Zephyrforge\Zephyrforge\Exception\HiddenException;
 use Zephyrforge\Zephyrforge\Exception\MainException;
 use Zephyrforge\Zephyrforge\Exception\NotFoundException;
 use Zephyrforge\Zephyrforge\Libs\Log\Log;
+use Zephyrforge\Zephyrforge\Libs\Response;
 
 /**
  * Kernel
@@ -91,9 +92,13 @@ class Kernel
         $controllerClass = '\\controller\\' . $action['controller'];
 
         if (!class_exists($controllerClass)) {
-            Log::log('Controller not found', 'WARNING', ['action' => $action, 'controllerClass' => $controllerClass]);
+            $filePath = self::$projectPath . '/public/' . htmlspecialchars($_GET['action']);
 
-            throw new NotFoundException('Controller not found');
+            if (file_exists($filePath)) {
+                (new Response())->fileContents($filePath);
+            }
+
+            throw new NotFoundException('Not found');
         }
 
         try {
@@ -106,6 +111,7 @@ class Kernel
 
             $controller->name = $action['controller'];
             $controller->action = $action['method'];
+            $controller->response = new Response();
 
             $controller->{$action['method']}(...$action['parameters']);
         } catch (Throwable $throwable) {

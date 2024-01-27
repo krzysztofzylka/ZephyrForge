@@ -3,6 +3,7 @@
 namespace Zephyrforge\Zephyrforge;
 
 use Zephyrforge\Zephyrforge\Libs\Model\LoadModel;
+use Zephyrforge\Zephyrforge\Libs\Response;
 
 /**
  * Controller
@@ -23,6 +24,12 @@ class Controller
      * @var string
      */
     public string $action;
+
+    /**
+     * Response
+     * @var Response
+     */
+    public Response $response;
 
     /**
      * Load view
