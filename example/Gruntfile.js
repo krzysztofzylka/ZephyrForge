@@ -6,14 +6,14 @@ module.exports = function(grunt) {
                 src: [
                     'node_modules/jquery/dist/jquery.min.js',
                     'node_modules/jquery-ui-dist/jquery-ui.min.js',
-                    'js/*.js'
+                    'src/public/js/*.js'
                 ],
                 dest: 'storage/tmp/app.js',
             },
             css: {
                 src: [
                     'node_modules/jquery-ui-dist/jquery-ui.min.css',
-                    'css/*.css'
+                    'src/public/css/*.css'
                 ],
                 dest: 'storage/tmp/app.css',
             },

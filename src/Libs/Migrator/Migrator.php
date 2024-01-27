@@ -305,13 +305,13 @@ class Migrator
     {
         $models = [];
 
-        foreach (scandir(Kernel::$projectPath . '/model') as $modelFilename) {
+        foreach (scandir(Kernel::$projectPath . '/src/model') as $modelFilename) {
             if (File::getExtension($modelFilename) !== 'php') {
                 continue;
             }
 
             $name = str_replace('.php', '', $modelFilename);
-            $class = '\\model\\' . $name;
+            $class = '\\src\\model\\' . $name;
 
             if (!class_exists($class)) {
                 continue;
