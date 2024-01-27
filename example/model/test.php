@@ -11,10 +11,8 @@ class test extends Model
     {
         return [
             [
-                'name' => 'key',
+                'name' => 'id',
                 'type' => 'int',
-                'length' => 11,
-                'null' => false,
                 'auto_increment' => true,
                 'primary_key' => true
             ],
@@ -25,7 +23,7 @@ class test extends Model
                 'null' => true
             ],
             [
-                'name' => 'description',
+                'name' => 'value',
                 'type' => 'text',
                 'null' => true
             ],
@@ -34,18 +32,7 @@ class test extends Model
                 'type' => 'datetime',
                 'default' => 'NOW()',
                 'default_function' => true
-            ],
-            [
-                'name' => 'date_modify',
-                'type' => 'datetime',
-                'default' => 'NOW()',
-                'default_function' => true
-            ],
-            [
-                'name' => 'alt',
-                'type' => 'text',
-                'null' => true
-            ],
+            ]
         ];
     }
 
