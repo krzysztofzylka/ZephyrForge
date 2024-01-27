@@ -57,10 +57,9 @@ class Kernel
 
             if (!Kernel::$silent) {
                 File::mkdir([
-                    self::$projectPath . '/model',
-                    self::$projectPath . '/controller',
-                    self::$projectPath . '/view',
-                    self::$projectPath . '/storage',
+                    self::$projectPath . '/src/model',
+                    self::$projectPath . '/src/controller',
+                    self::$projectPath . '/src/view',
                     self::$projectPath . '/storage/tmp',
                     self::$projectPath . '/storage/logs',
                     self::$projectPath . '/storage/cache',

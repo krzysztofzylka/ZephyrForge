@@ -33,7 +33,7 @@ class Twig
     public function __construct()
     {
         $this->twigFileSystemLoader = new FilesystemLoader();
-        $this->addPath(Kernel::$projectPath . '/view');
+        $this->addPath(Kernel::$projectPath . '/src/view');
         $this->twigEnvironment = new Environment($this->twigFileSystemLoader, [
             'cache' => Kernel::$projectPath . '/storage/cache/twig',
         ]);
