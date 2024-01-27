@@ -121,11 +121,13 @@ class Migrator
      * Creates migrations based on the defined table structures of the models.
      * Generates SQL statements for creating or dropping tables based on the model conditions.
      * @return void
+     * @throws DatabaseManagerException
      * @throws NotFoundException
      */
     public function createMigrations(): void
     {
         $models = $this->getModelList();
+        $modelsWithTable = ['migrations'];
         $controller = new Controller();
 
         foreach ($models as $model) {
@@ -135,6 +137,7 @@ class Migrator
                 continue;
             }
 
+            $modelsWithTable[] = $model->name;
             $tableStructure = $model->tableStructure();
 
             // Ok
@@ -223,6 +226,16 @@ class Migrator
                     $this->migrationData[] = 'ALTER TABLE `' . $model->useTable . '` CHANGE `' . $columnStructure['name'] . '` ' . $columnData[0];
                 }
             }
+        }
+
+        $databaseTables = [];
+
+        foreach (DatabaseManager::$connection->getConnection()->query('SHOW TABLES')->fetchAll(\PDO::FETCH_ASSOC) as $item) {
+            $databaseTables[] = array_values($item)[0];
+        }
+
+        foreach (array_diff($databaseTables, $modelsWithTable) as $deleteTableName) {
+            $this->migrationData[] = 'DROP TABLE `' . $deleteTableName . '`';
         }
 
         if (!empty($this->migrationData)) {
