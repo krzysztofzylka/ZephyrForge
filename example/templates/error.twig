@@ -1,0 +1,17 @@
+<html class="h-full">
+<head>
+    <link rel="stylesheet" href="theme.css">
+    <title>Error {{ code }}</title>
+</head>
+<body class="h-full">
+    <main class="dark:bg-slate-900 grid min-h-full place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
+        <div class="text-center">
+            <p class="text-2xl dark:text-indigo-500 font-semibold text-indigo-600">{{ code ?? 500 }}</p>
+            <h1 class="mt-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-200 sm:text-5xl">{{ message }}</h1>
+            <div class="mt-10 flex items-center justify-center gap-x-6">
+                <a href="/" class="btn-blue">Go back home</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
