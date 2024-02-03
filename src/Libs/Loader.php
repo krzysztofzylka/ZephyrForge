@@ -2,7 +2,6 @@
 
 namespace Zephyrforge\Zephyrforge\Libs;
 
-use Zephyrforge\Zephyrforge\Libs\Form\Form;
 use Zephyrforge\Zephyrforge\Libs\Table\Table;
 
 class Loader
