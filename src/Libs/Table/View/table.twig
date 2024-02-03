@@ -1,0 +1,57 @@
+<div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden overflow-x-auto" id="{{ id }}">
+    <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 p-2 bg-white dark:bg-gray-900">
+        <div class="w-full md:w-1/2">
+            {% for action in header.actions %}
+                <a href="{{ action.href | raw }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 {{ action.class | raw }}">
+                    action.name
+                </a>
+            {% endfor %}
+        </div>
+        <div class="relative">
+            <div class="absolute pt-3 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/></svg>
+            </div>
+            <form action="{{ here | raw }}" data-action="{{ header.search.action }}" method="POST" class="p-0 m-0 ajaxtableform">
+                <input type="text" id="table-search" placeholder="Search" name="table-search" value="{{ header.search.value }}" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+            </form>
+        </div>
+    </div>
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                {% for column in table.columns %}
+                    <th class="px-6 py-{{ table.slim ? 2 : 3 }}" scope="col" {{ column.attributes | raw }}>
+                       {{ column.name | raw }}
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        {% if table.data is empty %}
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td class="px-6 py-{{ table.slim ? 2 : 4 }}">
+                    No data
+                </td>
+            </tr>
+        {% else %}
+            {% for data in table.data %}
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    {% for column_key, column in table.columns %}
+                        <td class="px-6 py-{{ table.slim ? 2 : 4 }}">
+                            {{ data[column_key] | raw }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
+    <nav class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 p-4 bg-white dark:bg-gray-900">
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+            Showing <span class="font-semibold text-gray-900 dark:text-white">{{ footer.info.from }}-{{ footer.info.to }}</span> of <span class="font-semibold text-gray-900 dark:text-white">{{ footer.info.of }}</span>
+        </span>
+        <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+            {% for pagination in footer.pagination %}
+                <li class="{{ pagination.value == '>>' ? 'rounded-e-lg' : (pagination.value == '<<' ? 'rounded-s-lg': '') }} flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white {{ pagination.disabled ? 'opacity-50 cursor-not-allowed' : 'ajaxtable' }}" data-action="{{ pagination.action }}">{{ pagination.value | raw }}</li>
+            {% endfor %}
+        </ul>
+    </nav>
+</div>

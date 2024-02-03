@@ -3,16 +3,19 @@
 namespace Zephyrforge\Zephyrforge;
 
 use Exception;
+use Krzysztofzylka\Arrays\Arrays;
 use krzysztofzylka\DatabaseManager\DatabaseConnect;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use Krzysztofzylka\DatabaseManager\Enum\DatabaseType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use Krzysztofzylka\Env\Env;
 use Krzysztofzylka\File\File;
+use Krzysztofzylka\Request\Request;
 use Throwable;
 use Zephyrforge\Zephyrforge\Exception\HiddenException;
 use Zephyrforge\Zephyrforge\Exception\MainException;
 use Zephyrforge\Zephyrforge\Exception\NotFoundException;
+use Zephyrforge\Zephyrforge\Libs\Loader;
 use Zephyrforge\Zephyrforge\Libs\Log\Log;
 use Zephyrforge\Zephyrforge\Libs\Response;
 
@@ -113,12 +116,14 @@ class Kernel
             $controller->name = $action['controller'];
             $controller->action = $action['method'];
             $controller->response = new Response();
+            $controller->loader = new Loader();
+            $controller->data = Request::isPost() ? Arrays::escape($_POST) : null;
 
             $controller->{$action['method']}(...$action['parameters']);
         } catch (Throwable $throwable) {
             Log::throwableLog($throwable);
 
-            throw new MainException($throwable->getMessage(), 500, $throwable);
+            throw new MainException($throwable->getMessage(), $throwable->getCode() ?: 500, $throwable);
         }
 
         Kernel::$init = true;
@@ -133,10 +138,10 @@ class Kernel
         $getActions = explode('/', htmlspecialchars($_GET['action']), 3);
 
         return [
-                'controller' => $getActions[0] ?: 'index',
-                'method' => $getActions[1] ?: 'index',
-                'parameters' => isset($getActions[2]) ? explode('/', $getActions[2]) : []
-            ];
+            'controller' => $getActions[0] ?: 'index',
+            'method' => $getActions[1] ?: 'index',
+            'parameters' => isset($getActions[2]) ? explode('/', $getActions[2]) : []
+        ];
     }
 
     /**
