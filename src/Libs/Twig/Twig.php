@@ -2,6 +2,7 @@
 
 namespace Zephyrforge\Zephyrforge\Libs\Twig;
 
+use Twig\Cache\FilesystemCache;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
@@ -28,16 +29,33 @@ class Twig
     public Environment $twigEnvironment;
 
     /**
+     * Cache
+     * @var bool
+     */
+    private bool $cache;
+
+    /**
      * Constructor
      */
-    public function __construct()
+    public function __construct(?bool $cache = null)
     {
+        $this->setCache($cache ?? $_ENV['TWIG_CACHE']);
+
         $this->twigFileSystemLoader = new FilesystemLoader();
         $this->addPath(Kernel::$projectPath . '/src/view');
         $this->twigEnvironment = new Environment($this->twigFileSystemLoader, [
             'cache' => Kernel::$projectPath . '/storage/cache/twig',
         ]);
-        $this->twigEnvironment->setCache(false);
+
+        if ($this->isCache()) {
+            $cache = new FilesystemCache(
+                directory: Kernel::$projectPath . '/storage/cache/twig'
+            );
+
+            $this->twigEnvironment->setCache($cache);
+        } else {
+            $this->twigEnvironment->setCache(false);
+        }
     }
 
     /**
@@ -78,6 +96,25 @@ class Twig
     public function setPaths($path): void
     {
         $this->twigFileSystemLoader->setPaths($path);
+    }
+
+    /**
+     * Cache is active
+     * @return bool
+     */
+    public function isCache(): bool
+    {
+        return $this->cache;
+    }
+
+    /**
+     * Change twig cache
+     * @param bool $cache
+     * @return void
+     */
+    public function setCache(bool $cache): void
+    {
+        $this->cache = $cache;
     }
 
 }

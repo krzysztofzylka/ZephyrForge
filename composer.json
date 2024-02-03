@@ -17,9 +17,11 @@
     "require": {
         "php": ">=8.2",
         "twig/twig": "^3.8",
-        "krzysztofzylka/file": "1.0.*",
-        "krzysztofzylka/strings": "1.0.*",
-        "krzysztofzylka/database-manager": "^v1.0.31",
-        "krzysztofzylka/env": ">=1.0.2"
+        "krzysztofzylka/file": "^1",
+        "krzysztofzylka/strings": "^1.0",
+        "krzysztofzylka/database-manager": "^v1.0.32",
+        "krzysztofzylka/env": "^1.0.2",
+        "krzysztofzylka/request": "^1.0.1",
+        "krzysztofzylka/arrays": "^1.0.0"
     }
 }

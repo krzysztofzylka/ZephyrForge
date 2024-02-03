@@ -16,6 +16,18 @@ class View
 {
 
     /**
+     * Global app variables
+     * @var array
+     */
+    public static array $APP = [
+        'here' => null,
+        'dialog_config' => [
+            'title' => null,
+            'width' => null
+        ]
+    ];
+
+    /**
      * Twig instance
      * @var Twig
      */
@@ -23,10 +35,13 @@ class View
 
     /**
      * Constructor
+     * @param bool|null $cache
      */
-    public function __construct()
+    public function __construct(bool $cache = null)
     {
-        $this->twig = new Twig();
+        $this->twig = new Twig(
+            cache: $cache
+        );
     }
 
     /**
@@ -47,6 +62,19 @@ class View
 
             throw new NotFoundException('View not found');
         }
+
+        $variables = array_merge(
+            $variables,
+            [
+                'APP' => array_merge(
+                    self::$APP,
+                    [
+                        'here' => $_SERVER['REQUEST_URI'],
+                        'dialog_config' => json_encode(self::$APP['dialog_config'])
+                    ]
+                )
+            ]
+        );
 
         try {
             echo $this->twig->render($viewPath, $variables);
