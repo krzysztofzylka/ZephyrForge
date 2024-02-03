@@ -16,8 +16,8 @@ class Response
      * @param string $message
      * @param string $title
      * @param string $type
-     * @param bool $dialogboxClose
-     * @param bool $dialogboxReload
+     * @param bool $dialogClose
+     * @param bool $dialogReload
      * @param bool $reloadPage
      * @return never
      */
@@ -25,8 +25,8 @@ class Response
         string $message,
         string $title = '',
         string $type = '',
-        bool $dialogboxClose = false,
-        bool $dialogboxReload = false,
+        bool $dialogClose = false,
+        bool $dialogReload = false,
         bool $reloadPage = false
     ): never
     {
@@ -36,8 +36,8 @@ class Response
             'message' => $message,
             'title' => $title,
             'dialog' => [
-                'close' => (int)$dialogboxClose,
-                'reload' => (int)$dialogboxReload
+                'close' => (int)$dialogClose,
+                'reload' => (int)$dialogReload
             ],
             'reloadPage' => (int)$reloadPage
         ]);
