@@ -38,7 +38,26 @@ class Model
      * Database table instance
      * @var Table
      */
-    public Table $tableInstance;
+    protected Table $tableInstance;
+
+    /**
+     * Get ID
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return $this->tableInstance->getId();
+    }
+
+    /**
+     * Set ID
+     * @param int|null $id
+     * @return void
+     */
+    public function setId(?int $id): void
+    {
+        $this->tableInstance->setId($id);
+    }
 
     /**
      * Creates a new record in the table with the specified data.
@@ -145,19 +164,18 @@ class Model
 
     /**
      * Updates a record in the table with the specified ID using the provided data.
-     * @param int $id The ID of the record to update.
      * @param array $data An array containing the new data for the record.
      * @return bool Returns true if the record was successfully updated, or false if there is no database connection or the useTable property is false.
      * @throws HiddenException If an error occurs while executing the database query.
      */
-    public function update(int $id, array $data): bool
+    public function update(array $data): bool
     {
         if (!$_ENV['DATABASE'] && $this->useTable !== false) {
             return false;
         }
 
         try {
-            return $this->tableInstance->setId($id)->update(
+            return $this->tableInstance->update(
                 data: $data
             );
         } catch (DatabaseManagerException $exception) {
@@ -202,20 +220,17 @@ class Model
 
     /**
      * Delete a record from the table by ID.
-     * @param int $id The ID of the record to delete.
      * @return bool Returns true if the record is successfully deleted, false otherwise.
      * @throws HiddenException Throws a HiddenException if an error occurs during the deletion process.
      */
-    public function delete(int $id): bool
+    public function delete(): bool
     {
-        if (!$_ENV['DATABASE'] && $this->useTable !== false) {
+        if (!$_ENV['DATABASE'] && $this->useTable !== false || is_null($this->getId())) {
             return false;
         }
 
         try {
-            return $this->tableInstance->delete(
-                id: $id
-            );
+            return $this->tableInstance->delete();
         } catch (DatabaseManagerException $exception) {
             Log::throwableLog($exception);
 
@@ -225,6 +240,69 @@ class Model
                 $exception
             );
         }
+    }
+
+    /**
+     * Query
+     * @param string $sql
+     * @return array
+     */
+    public function query(string $sql): array
+    {
+        if (!$_ENV['DATABASE'] && $this->useTable !== false) {
+            return [];
+        }
+
+        return $this->tableInstance->query($sql);
+    }
+
+    /**
+     * Increments the value of a column in the table.
+     * @param string $columnName The name of the column to increment.
+     * @param int $add The value to add to the column (default: 1).
+     * @return bool Returns true if the increment was successful, false otherwise.
+     * @see getId()
+     * @see query()
+     */
+    public function incrementValue(string $columnName, int $add = 1): bool
+    {
+        if (!$_ENV['DATABASE'] && $this->useTable !== false || is_null($this->getId())) {
+            return false;
+        }
+
+        return (bool)$this->query('UPDATE ' . $this->useTable . ' SET ' . $columnName . ' = ' . $columnName . ' + ' . $add . ' WHERE id=' . $this->getId());
+    }
+
+    /**
+     * Decrements the value of a specified column in the table by a given value.
+     * @param string $columnName The name of the column to decrement.
+     * @param int $dec The value to decrement by (default: 1).
+     * @return bool Returns true if the value is decremented successfully, false otherwise.
+     * @see getId()
+     * @see query()
+     */
+    public function decrementValue(string $columnName, int $dec = 1): bool
+    {
+        if (!$_ENV['DATABASE'] && $this->useTable !== false || is_null($this->getId())) {
+            return false;
+        }
+
+        return (bool)$this->query('UPDATE ' . $this->useTable . ' SET ' . $columnName . ' = ' . $columnName . ' - ' . $dec . ' WHERE id=' . $this->getId());
+    }
+
+    /**
+     * Checks if any records exist in the table that match the given conditions.
+     * @param array $conditions An array of conditions to check for existence.
+     * @return bool Returns true if records exist that match the conditions, false otherwise.
+     * @throws DatabaseManagerException
+     */
+    public function isset(array $conditions): bool
+    {
+        if (!$_ENV['DATABASE'] && $this->useTable !== false) {
+            return false;
+        }
+
+        return $this->tableInstance->findIsset($conditions);
     }
 
     /**
